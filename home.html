@@ -3,510 +3,652 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Employee Management System</title>
+    <title>HRMS | Dashboard</title>
 
     <link rel="stylesheet" href="{% static 'employee/css/style.css' %}">
 </head>
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+<!-- SIDEBAR -->
+<aside class="sidebar">
 
-        <div class="logo">
-            <span class="logo-icon">E</span>
-            <h2>EMS</h2>
-        </div>
+    <div class="logo">
+        <div class="logo-icon">H</div>
+        <h2>HRMS</h2>
+    </div>
 
-        <p class="menu-heading">MAIN MENU</p>
+    <p class="menu-heading">MENU</p>
+
+    <nav class="sidebar-menu">
 
         <a href="{% url 'home' %}" class="menu-link active">
-            <span>▦</span> Dashboard
+            <span>⌂</span> Dashboard
         </a>
 
         <button class="menu-link" onclick="openModal('addModal')">
-            <span>＋</span> Add Employee
+            <span>♟</span> Add Employee
         </button>
 
         <a href="#employeeSection" class="menu-link">
-            <span>+</span> Edit Employee
+            <span>✎</span> Edit Employee
         </a>
 
         <a href="#employeeSection" class="menu-link">
-                <span>+</span> Delete Employee
+            <span>▤</span> Delete Employee
         </a>
-        </button>
 
-        <div class="sidebar-bottom">
-            <div class="sidebar-profile">
-                <div class="profile-icon">A</div>
-                <div>
-                    <strong>Administrator</strong>
-                    <small>EMS Manager</small>
-                </div>
-            </div>
-        </div>
+    </nav>
 
-    </aside>
-
-
-    <!-- Main Content -->
-    <main class="main-content">
-
-        <!-- Top Header -->
-        <header class="top-header">
+    <div class="sidebar-bottom">
+        <div class="sidebar-profile">
+            <div class="profile-icon">A</div>
             <div>
-                <h2>Dashboard</h2>
-                <p>Overview of your employee management system</p>
+                <strong>Admin</strong>
+                <small>Administrator</small>
             </div>
-
-            <div class="admin-label">
-                <span>●</span> Admin Panel
-            </div>
-        </header>
-
-
-        <!-- Welcome Banner -->
-        <section class="welcome-section">
-
-            <div class="welcome-text">
-                <span class="welcome-tag">EMPLOYEE MANAGEMENT SYSTEM</span>
-
-                <h1>Welcome to EMS!</h1>
-
-                <p>
-                    Manage your team, track employee information
-                    and keep everything organized in one place.
-                </p>
-
-                
-            </div>
-
-            <div class="welcome-image">
-                <img
-                    src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600"
-                    alt="Team working together">
-            </div>
-
-        </section>
-
-
-        <!-- Statistics -->
-        <section class="stats-container">
-
-            <div class="stat-card">
-
-                <div class="stat-top">
-                    <div class="stat-icon employee-icon">♟</div>
-                    <span class="stat-label">EMPLOYEES</span>
-                </div>
-
-                <h2>{{ total_employees }}</h2>
-                <p>Total Employees</p>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-top">
-                    <div class="stat-icon department-icon">▦</div>
-                    <span class="stat-label">DEPARTMENTS</span>
-                </div>
-
-                <h2>{{ total_departments }}</h2>
-                <p>Total Departments</p>
-
-            </div>
-            <div class="stat-card">
-
-            <div class="stat-top">
-                <div class="stat-icon position-icon">▣</div>
-                <span class="stat-label">POSITIONS</span>
-            </div>
-
-            <h2>{{ total_positions }}</h2>
-            <p>Total Positions</p>
-
         </div>
-
-        </section>
-
-
-        <!-- Employee Details -->
-        <section class="employee-section">
-
-            <div class="section-header">
-
-                <div>
-                    <h2>Employee Details</h2>
-                    <p>View and manage your employees</p>
-                </div>
-
-                <button class="primary-btn" onclick="openModal('addModal')">
-                    + Add Employee
-                </button>
-
-            </div>
-
-
-            <!-- Search and Filter -->
-            <form method="GET" class="filter-form">
-
-                <div class="search-box">
-                    <span>⌕</span>
-
-                    <input
-                        type="text"
-                        name="search"
-                        placeholder="Search by employee name..."
-                        value="{{ request.GET.search|default:'' }}">
-                </div>
-
-                <select name="department">
-                    <option value="">All Departments</option>
-
-                    {% for dept in departments %}
-                        <option value="{{ dept }}"
-                            {% if request.GET.department == dept %}selected{% endif %}>
-                            {{ dept }}
-                        </option>
-                    {% endfor %}
-
-                </select>
-
-                <button type="submit" class="search-btn">
-                    Search
-                </button>
-
-                <a href="{% url 'home' %}" class="reset-btn">
-                    Reset
-                </a>
-
-            </form>
-
-
-            <!-- Employee Table -->
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>EMPLOYEE</th>
-                            <th>EMAIL</th>
-                            <th>POSITION</th>
-                            <th>DEPARTMENT</th>
-                            <th>DATE JOINED</th>
-                            <th>ACTIONS</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {% for employee in employees %}
-
-                        <tr>
-
-                            <td>#{{ employee.id }}</td>
-
-                            <td>
-                                <div class="employee-name">
-                                    <div class="employee-avatar">
-                                        {{ employee.name|first|upper }}
-                                    </div>
-                                    <strong>{{ employee.name }}</strong>
-                                </div>
-                            </td>
-
-                            <td>{{ employee.email }}</td>
-
-                            <td>{{ employee.position }}</td>
-
-                            <td>
-                                <span class="department-badge">
-                                    {{ employee.department }}
-                                </span>
-                            </td>
-
-                            <td>{{ employee.date_joined|date:"d M Y" }}</td>
-
-                            <td class="action-buttons">
-
-                                <button
-                                    type="button"
-                                    class="edit-btn"
-                                    onclick="openModal('editModal{{ employee.id }}')">
-                                    Edit
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="delete-btn"
-                                    onclick="openModal('deleteModal{{ employee.id }}')">
-                                    Delete
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-                        {% empty %}
-
-                        <tr>
-                            <td colspan="7" class="empty-message">
-                                No employees found.
-                            </td>
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-        <footer>
-            Employee Management System | Dashboard
-        </footer>
-
-    </main>
-
-
-    <!-- ADD EMPLOYEE POPUP -->
-    <div class="modal" id="addModal">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <div>
-                    <h2>Add New Employee</h2>
-                    <p>Enter the employee information below.</p>
-                </div>
-
-                <button type="button" class="close-btn"
-                    onclick="closeModal('addModal')">&times;</button>
-
-            </div>
-
-            <form method="POST" action="{% url 'add_employee' %}">
-
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label>Employee Name</label>
-                    <input type="text" name="name"
-                        placeholder="Enter employee name" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email"
-                        placeholder="Enter email address" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Position</label>
-                    <input type="text" name="position"
-                        placeholder="Enter position" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Department</label>
-                    <input type="text" name="department"
-                        placeholder="Enter department" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Date Joined</label>
-                    <input type="date" name="date_joined" required>
-                </div>
-
-                <div class="modal-actions">
-
-                    <button type="button" class="cancel-btn"
-                        onclick="closeModal('addModal')">
-                        Cancel
-                    </button>
-
-                    <button type="submit" class="primary-btn">
-                        Save Employee
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
     </div>
 
+</aside>
 
-    <!-- EDIT EMPLOYEE POPUPS -->
-    {% for employee in employees %}
 
-    <div class="modal" id="editModal{{ employee.id }}">
+<!-- MAIN CONTENT -->
+<main class="main-content">
 
-        <div class="modal-content">
+    <!-- TOP HEADER -->
+    <header class="top-header">
 
-            <div class="modal-header">
-
-                <div>
-                    <h2>Update Employee</h2>
-                    <p>Edit the employee information below.</p>
-                </div>
-
-                <button type="button" class="close-btn"
-                    onclick="closeModal('editModal{{ employee.id }}')">
-                    &times;
-                </button>
-
-            </div>
-
-            <form method="POST"
-                action="{% url 'edit_employee' employee.id %}">
-
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label>Employee Name</label>
-                    <input type="text" name="name"
-                        value="{{ employee.name }}" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email"
-                        value="{{ employee.email }}" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Position</label>
-                    <input type="text" name="position"
-                        value="{{ employee.position }}" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Department</label>
-                    <input type="text" name="department"
-                        value="{{ employee.department }}" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Date Joined</label>
-                    <input type="date" name="date_joined"
-                        value="{{ employee.date_joined|date:'Y-m-d' }}"
-                        required>
-                </div>
-
-                <div class="modal-actions">
-
-                    <button type="button" class="cancel-btn"
-                        onclick="closeModal('editModal{{ employee.id }}')">
-                        Cancel
-                    </button>
-
-                    <button type="submit" class="primary-btn">
-                        Update Employee
-                    </button>
-
-                </div>
-
-            </form>
-
+        <div>
+            <h2>Dashboard</h2>
+            <p>Welcome back, Admin!</p>
         </div>
 
-    </div>
+        <div class="admin-label">
+            <span>●</span> Admin
+        </div>
+
+    </header>
 
 
-    <!-- DELETE CONFIRMATION POPUP -->
-    <div class="modal" id="deleteModal{{ employee.id }}">
+    <!-- WELCOME SECTION -->
+    <section class="welcome-section">
 
-        <div class="modal-content delete-modal-content">
+        <div class="welcome-text">
 
-            <div class="delete-symbol">!</div>
+            <span class="welcome-tag">HR MANAGEMENT</span>
 
-            <h2>Delete Employee?</h2>
+            <h1>Welcome to HRMS</h1>
 
             <p>
-                Are you sure you want to delete
-                <strong>{{ employee.name }}</strong>?
-                This action cannot be undone.
+                Manage your employees, departments
+                and organization efficiently.
             </p>
 
-            <form method="POST"
-                action="{% url 'delete_employee' employee.id %}">
-
-                {% csrf_token %}
-
-                <div class="modal-actions">
-
-                    <button type="button" class="cancel-btn"
-                        onclick="closeModal('deleteModal{{ employee.id }}')">
-                        Cancel
-                    </button>
-
-                    <button type="submit" class="confirm-delete-btn">
-                        Yes, Delete
-                    </button>
-
-                </div>
-
-            </form>
+            <button class="welcome-btn"
+                    onclick="document.getElementById('employeeSection').scrollIntoView({behavior:'smooth'})">
+                Get Started <span>→</span>
+            </button>
 
         </div>
 
+
+        <!-- WELCOME ILLUSTRATION -->
+        <div class="welcome-image">
+
+            <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+
+                <!-- Laptop -->
+                <rect x="35" y="65" width="225" height="145" rx="12"
+                      fill="#102e83" transform="rotate(-5 35 65)"/>
+
+                <rect x="47" y="76" width="201" height="119" rx="8"
+                      fill="#eff6ff" transform="rotate(-5 47 76)"/>
+
+                <!-- People on screen -->
+                <circle cx="105" cy="125" r="17" fill="#60a5fa"/>
+                <path d="M77 174 Q105 130 133 174 Z" fill="#3b82f6"/>
+
+                <circle cx="157" cy="116" r="22" fill="#2563eb"/>
+                <path d="M122 177 Q157 125 192 177 Z" fill="#1d4ed8"/>
+
+                <circle cx="208" cy="125" r="17" fill="#60a5fa"/>
+                <path d="M180 174 Q208 130 236 174 Z" fill="#3b82f6"/>
+
+                <path d="M20 213 L270 213 L292 229 L5 229 Z"
+                      fill="#1e40af"/>
+
+                <!-- Clipboard -->
+                <rect x="280" y="28" width="112" height="183"
+                      rx="10" fill="#1e3a8a"/>
+
+                <rect x="288" y="38" width="96" height="163"
+                      rx="7" fill="#eff6ff"/>
+
+                <rect x="318" y="20" width="38" height="17"
+                      rx="6" fill="#1e40af"/>
+
+                <circle cx="336" cy="78" r="17" fill="#3b82f6"/>
+                <path d="M308 113 Q336 79 364 113 Z" fill="#2563eb"/>
+
+                <path d="M305 137 L315 147 L330 131"
+                      stroke="#2563eb" stroke-width="5"
+                      fill="none" stroke-linecap="round"/>
+
+                <rect x="338" y="137" width="30" height="6"
+                      rx="3" fill="#bfdbfe"/>
+
+                <path d="M305 164 L315 174 L330 158"
+                      stroke="#2563eb" stroke-width="5"
+                      fill="none" stroke-linecap="round"/>
+
+                <rect x="338" y="164" width="30" height="6"
+                      rx="3" fill="#bfdbfe"/>
+
+                <!-- Plant -->
+                <path d="M398 183 Q380 135 397 103"
+                      stroke="#15803d" stroke-width="5" fill="none"/>
+
+                <ellipse cx="381" cy="125" rx="12" ry="24"
+                         fill="#22c55e" transform="rotate(-40 381 125)"/>
+
+                <ellipse cx="407" cy="112" rx="12" ry="24"
+                         fill="#16a34a" transform="rotate(35 407 112)"/>
+
+                <path d="M381 184 L415 184 L409 215 L387 215 Z"
+                      fill="#bfdbfe"/>
+
+            </svg>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATISTICS -->
+    <section class="stats-container">
+
+        <!-- EMPLOYEES -->
+        <div class="stat-card employee-card">
+
+            <div class="stat-illustration">
+
+                <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg">
+
+                    <circle cx="65" cy="25" r="16" fill="#2563eb"/>
+                    <path d="M35 85 Q35 43 65 43 Q95 43 95 85 Z"
+                          fill="#2563eb"/>
+
+                    <circle cx="27" cy="38" r="12" fill="#60a5fa"/>
+                    <path d="M5 88 Q5 57 27 57 Q42 57 48 75 L48 88 Z"
+                          fill="#60a5fa"/>
+
+                    <circle cx="103" cy="38" r="12" fill="#60a5fa"/>
+                    <path d="M82 75 Q88 57 103 57 Q125 57 125 88 L82 88 Z"
+                          fill="#60a5fa"/>
+
+                </svg>
+
+            </div>
+
+            <div class="stat-details">
+                <span class="stat-label">TOTAL EMPLOYEES</span>
+                <h2>{{ total_employees }}</h2>
+                <p>Total Employees</p>
+            </div>
+
+        </div>
+
+
+        <!-- DEPARTMENTS -->
+        <div class="stat-card department-card">
+
+            <div class="stat-illustration">
+
+                <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg">
+
+                    <rect x="20" y="25" width="90" height="75"
+                          rx="5" fill="#8b5cf6"/>
+
+                    <rect x="43" y="8" width="45" height="92"
+                          rx="4" fill="#6d28d9"/>
+
+                    <g fill="#ede9fe">
+                        <rect x="51" y="19" width="9" height="12"/>
+                        <rect x="70" y="19" width="9" height="12"/>
+                        <rect x="51" y="40" width="9" height="12"/>
+                        <rect x="70" y="40" width="9" height="12"/>
+                        <rect x="51" y="61" width="9" height="12"/>
+                        <rect x="70" y="61" width="9" height="12"/>
+                        <rect x="51" y="82" width="9" height="12"/>
+                        <rect x="70" y="82" width="9" height="12"/>
+                    </g>
+
+                    <rect x="60" y="79" width="12" height="21"
+                          fill="#ddd6fe"/>
+
+                </svg>
+
+            </div>
+
+            <div class="stat-details">
+                <span class="stat-label">TOTAL DEPARTMENTS</span>
+                <h2>{{ total_departments }}</h2>
+                <p>Total Departments</p>
+            </div>
+
+        </div>
+
+
+        <!-- POSITIONS -->
+        <div class="stat-card position-card">
+
+            <div class="stat-illustration">
+
+                <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg">
+
+                    <rect x="20" y="35" width="90" height="60"
+                          rx="10" fill="#059669"/>
+
+                    <path d="M45 35 V22 Q45 12 55 12 H75 Q85 12 85 22 V35"
+                          stroke="#047857" stroke-width="9"
+                          fill="none"/>
+
+                    <rect x="55" y="52" width="20" height="15"
+                          rx="3" fill="#a7f3d0"/>
+
+                    <path d="M20 58 L65 76 L110 58"
+                          fill="none" stroke="#047857"
+                          stroke-width="4"/>
+
+                </svg>
+
+            </div>
+
+            <div class="stat-details">
+                <span class="stat-label">TOTAL POSITIONS</span>
+                <h2>{{ total_positions }}</h2>
+                <p>Total Positions</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- EMPLOYEE MANAGEMENT -->
+    <section class="employee-section" id="employeeSection">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Employee Management</h2>
+                <p>Manage and view all employees in your organization.</p>
+            </div>
+
+            <button class="primary-btn"
+                    onclick="openModal('addModal')">
+                + Add Employee
+            </button>
+
+        </div>
+
+
+        <!-- SEARCH AND FILTER -->
+        <form method="GET" class="filter-form">
+
+            <div class="search-box">
+                <span>⌕</span>
+
+                <input type="text"
+                       name="search"
+                       placeholder="Search employees..."
+                       value="{{ request.GET.search }}">
+            </div>
+
+            <select name="department">
+
+                <option value="">All Departments</option>
+
+                {% for department in departments %}
+
+                    <option value="{{ department }}"
+                        {% if request.GET.department == department %}selected{% endif %}>
+                        {{ department }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit" class="search-btn">
+                Search
+            </button>
+
+            <a href="{% url 'home' %}" class="reset-btn">
+                ↻ Reset
+            </a>
+
+        </form>
+
+
+        <!-- EMPLOYEE TABLE -->
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>EMPLOYEE NAME</th>
+                        <th>DEPARTMENT</th>
+                        <th>POSITION</th>
+                        <th>EMAIL</th>
+                        <th>JOIN DATE</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for employee in employees %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+                            <div class="employee-name">
+                                <div class="employee-avatar">
+                                    {{ employee.name|first|upper }}
+                                </div>
+                                {{ employee.name }}
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="department-badge">
+                                {{ employee.department }}
+                            </span>
+                        </td>
+
+                        <td>{{ employee.position }}</td>
+
+                        <td>{{ employee.email }}</td>
+
+                        <td>{{ employee.date_joined|date:"Y-m-d" }}</td>
+
+                        <td class="action-buttons">
+
+                            <button type="button"
+                                    class="edit-btn"
+                                    onclick="openModal('editModal-{{ employee.id }}')">
+                                Edit
+                            </button>
+
+                            <button type="button"
+                                    class="delete-btn"
+                                    onclick="openModal('deleteModal-{{ employee.id }}')">
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- EDIT EMPLOYEE POPUP -->
+                    <div class="modal" id="editModal-{{ employee.id }}">
+
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <div>
+                                    <h2>Edit Employee</h2>
+                                    <p>Update employee information.</p>
+                                </div>
+
+                                <button type="button"
+                                        class="close-btn"
+                                        onclick="closeModal('editModal-{{ employee.id }}')">
+                                    &times;
+                                </button>
+                            </div>
+
+                            <form method="POST"
+                                  action="{% url 'edit_employee' employee.id %}">
+
+                                {% csrf_token %}
+
+                                <div class="form-group">
+                                    <label>Employee Name</label>
+                                    <input type="text" name="name"
+                                           value="{{ employee.name }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="email"
+                                           value="{{ employee.email }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Position</label>
+                                    <input type="text" name="position"
+                                           value="{{ employee.position }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <input type="text" name="department"
+                                           value="{{ employee.department }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Date Joined</label>
+                                    <input type="date" name="date_joined"
+                                           value="{{ employee.date_joined|date:'Y-m-d' }}" required>
+                                </div>
+
+                                <div class="modal-actions">
+
+                                    <button type="button"
+                                            class="cancel-btn"
+                                            onclick="closeModal('editModal-{{ employee.id }}')">
+                                        Cancel
+                                    </button>
+
+                                    <button type="submit" class="primary-btn">
+                                        Update Employee
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DELETE CONFIRMATION POPUP -->
+                    <div class="modal" id="deleteModal-{{ employee.id }}">
+
+                        <div class="modal-content delete-modal-content">
+
+                            <div class="delete-symbol">!</div>
+
+                            <h2>Delete Employee?</h2>
+
+                            <p>
+                                Are you sure you want to delete
+                                <strong>{{ employee.name }}</strong>?
+                                This action cannot be undone.
+                            </p>
+
+                            <form method="POST"
+                                  action="{% url 'delete_employee' employee.id %}">
+
+                                {% csrf_token %}
+
+                                <div class="modal-actions">
+
+                                    <button type="button"
+                                            class="cancel-btn"
+                                            onclick="closeModal('deleteModal-{{ employee.id }}')">
+                                        Cancel
+                                    </button>
+
+                                    <button type="submit" class="confirm-delete-btn">
+                                        Yes, Delete
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7" class="empty-message">
+                            No employees found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 HRMS. All rights reserved.
+    </footer>
+
+</main>
+
+
+<!-- ADD EMPLOYEE POPUP -->
+<div class="modal" id="addModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add New Employee</h2>
+                <p>Enter the employee details below.</p>
+            </div>
+
+            <button type="button"
+                    class="close-btn"
+                    onclick="closeModal('addModal')">
+                &times;
+            </button>
+
+        </div>
+
+
+        <form method="POST" action="{% url 'add_employee' %}">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Employee Name</label>
+                <input type="text" name="name" placeholder="Enter employee name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Enter email address" required>
+            </div>
+
+            <div class="form-group">
+                <label>Position</label>
+                <input type="text" name="position" placeholder="Enter position" required>
+            </div>
+
+            <div class="form-group">
+                <label>Department</label>
+                <input type="text" name="department" placeholder="Enter department" required>
+            </div>
+
+            <div class="form-group">
+                <label>Date Joined</label>
+                <input type="date" name="date_joined" required>
+            </div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="cancel-btn"
+                        onclick="closeModal('addModal')">
+                    Cancel
+                </button>
+
+                <button type="submit" class="primary-btn">
+                    Add Employee
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
 
-    {% endfor %}
+</div>
 
 
-    <!-- POPUP JAVASCRIPT -->
-    <script>
+<!-- JAVASCRIPT -->
+<script>
 
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = "flex";
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "flex";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+
+    // Close popup when clicking outside
+    window.onclick = function(event) {
+
+        if (event.target.classList.contains("modal")) {
+            event.target.style.display = "none";
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
+    };
+
+
+    // Close popup using Escape key
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "Escape") {
+
+            document.querySelectorAll(".modal").forEach(function(modal) {
+                modal.style.display = "none";
+            });
+
         }
 
-        // Close popup when clicking outside it
-        window.onclick = function(event) {
+    });
 
-            if (event.target.classList.contains("modal")) {
-                event.target.style.display = "none";
-            }
-
-        };
-
-        // Close popup using Escape key
-        document.addEventListener("keydown", function(event) {
-
-            if (event.key === "Escape") {
-
-                let modals = document.querySelectorAll(".modal");
-
-                modals.forEach(function(modal) {
-                    modal.style.display = "none";
-                });
-
-            }
-
-        });
-
-    </script>
+</script>
 
 </body>
 </html>
