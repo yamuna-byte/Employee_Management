@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="{% static 'employee/css/style.css' %}">
 </head>
-    
+
 <body>
 
 <!-- SIDEBAR -->
@@ -358,17 +358,22 @@
                         <td>{{ forloop.counter }}</td>
 
                         <td>
-                            <div class="employee-name">
+    <div class="employee-name">
 
-                                <div class="employee-avatar">
-                                    {{ employee.name|first|upper }}
-                                </div>
+        <div class="employee-avatar" style="overflow:hidden; flex-shrink:0;">
+            {% if employee.photo %}
+                <img src="{{ employee.photo.url }}"
+                     alt="{{ employee.name }}"
+                     style="width:35px; height:35px; max-width:35px; object-fit:cover; border-radius:50%; display:block;">
+            {% else %}
+                {{ employee.name|first|upper }}
+            {% endif %}
+        </div>
 
-                                {{ employee.name }}
+        {{ employee.name }}
 
-                            </div>
-                        </td>
-
+    </div>
+</td>          
                         <td>
                             <span class="department-badge">
                                 {{ employee.department }}
@@ -390,18 +395,19 @@
                             </button>
 
                             <!-- QR CODE BUTTON -->
-                            <button type="button"
-                                    class="qr-btn"
-                                    onclick="openEmployeeCard(this)"
-                                    data-id="{{ employee.id }}"
-                                    data-name="{{ employee.name }}"
-                                    data-email="{{ employee.email }}"
-                                    data-position="{{ employee.position }}"
-                                    data-department="{{ employee.department }}"
-                                    data-date="{{ employee.date_joined|date:'Y-m-d' }}"
-                                    data-qr="{{ employee.qr_code }}">
-                                QR Code
-                            </button>
+                        <button type="button"
+                                class="qr-btn"
+                                onclick="openEmployeeCard(this)"
+                                data-id="{{ employee.id }}"
+                                data-name="{{ employee.name }}"
+                                data-email="{{ employee.email }}"
+                                data-position="{{ employee.position }}"
+                                data-department="{{ employee.department }}"
+                                data-date="{{ employee.date_joined|date:'Y-m-d' }}"
+                                data-qr="{{ employee.qr_code }}"
+                                data-photo="{% if employee.photo %}{{ employee.photo.url }}{% endif %}">
+                            QR Code
+                        </button>
 
                             <button type="button"
                                     class="delete-btn"
@@ -435,6 +441,7 @@
     <!-- EDIT AND DELETE POPUPS -->
     {% for employee in employees %}
 
+    
     <!-- EDIT EMPLOYEE POPUP -->
     <div class="modal" id="editModal-{{ employee.id }}">
 
@@ -456,7 +463,8 @@
             </div>
 
             <form method="POST"
-                  action="{% url 'edit_employee' employee.id %}">
+                  action="{% url 'edit_employee' employee.id %}"
+                  enctype="multipart/form-data">
 
                 {% csrf_token %}
 
@@ -488,6 +496,11 @@
                     <label>Date Joined</label>
                     <input type="date" name="date_joined"
                            value="{{ employee.date_joined|date:'Y-m-d' }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Photo</label>
+                    <input type="file" name="photo" accept="image/*">
                 </div>
 
                 <div class="modal-actions">
@@ -561,7 +574,6 @@
 
 </main>
 
-
 <!-- ADD EMPLOYEE POPUP -->
 <div class="modal" id="addModal">
 
@@ -582,7 +594,7 @@
 
         </div>
 
-        <form method="POST" action="{% url 'add_employee' %}">
+        <form method="POST" action="{% url 'add_employee' %}" enctype="multipart/form-data">
 
             {% csrf_token %}
 
@@ -615,6 +627,11 @@
                 <input type="date" name="date_joined" required>
             </div>
 
+            <div class="form-group">
+                <label>Photo</label>
+                <input type="file" name="photo" accept="image/*">
+            </div>
+
             <div class="modal-actions">
 
                 <button type="button"
@@ -634,8 +651,6 @@
     </div>
 
 </div>
-
-
 <!-- EMPLOYEE ID CARD POPUP -->
 <div class="modal" id="employeeCardModal">
 
