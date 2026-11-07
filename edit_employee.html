@@ -17,7 +17,7 @@
             <h2>Update Employee</h2>
             <p>Modify the employee details below.</p>
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
 
                 {% csrf_token %}
 
@@ -40,6 +40,13 @@
                 <label>Date Joined</label>
                 <input type="date" name="date_joined"
                        value="{{ employee.date_joined|date:'Y-m-d' }}" required>
+
+                <label>Photo</label>
+                {% if employee.photo %}
+                    <img src="{{ employee.photo.url }}" alt="Current photo"
+                         style="width:80px;height:80px;object-fit:cover;border-radius:50%;display:block;margin-bottom:8px;">
+                {% endif %}
+                <input type="file" name="photo" accept="image/*">
 
                 <div class="form-buttons">
 
