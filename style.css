@@ -882,3 +882,66 @@ footer {
     }
 
 }
+/*  flipcard css */
+
+/* 3D EMPLOYEE ID CARD */
+
+.flip-card {
+    width: 100%;
+    height: 410px;
+    perspective: 1000px;
+    cursor: pointer;
+    position: relative;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s ease;
+    transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg) !important;
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 25px 20px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.flip-card-front {
+    background: linear-gradient(145deg, #1e3a8a, #2563eb);
+    color: white;
+    transform: rotateY(0deg);
+}
+
+.flip-card-back {
+    background: #dbeafe;
+    color: #1e3a8a;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flip-card-back img {
+    width: 190px !important;
+    height: 190px !important;
+    object-fit: contain;
+    background: white;
+    padding: 8px;
+    border-radius: 10px;
+}
